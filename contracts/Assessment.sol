@@ -49,11 +49,8 @@ contract Assessment {
         emit Withdraw(_withdrawAmount);
 
         // withdraw the given amount
-        //owner.transfer(_withdrawAmount);
         balance -= _withdrawAmount;
 
-        //console.log(_previousBalance);
-        //console.log(balance);
         // assert the balance is correct
         assert(balance == (_previousBalance - _withdrawAmount));
 
