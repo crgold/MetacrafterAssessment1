@@ -1,0 +1,95 @@
+import {useState, useEffect} from "react";
+import {Contract, providers, ethers} from "ethers";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+import atm_abi from "../artifacts/contracts/Assessment.sol/Assessment.json";
+
+interface IWeb3 {  
+  ethereum?: MetaMaskInpageProvider;
+  provider?: providers.Web3Provider;
+  contract?: Contract;
+};
+
+declare global {
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
+  }
+}
+
+export default function HomePage() {
+  const [ethWallet, setEthWallet] = useState<any>(undefined);
+  const [account, setAccount] = useState<String | undefined>(undefined);
+  const [atm, setATM] = useState<Contract | undefined>(undefined);
+
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const atmABI = atm_abi.abi;
+
+  const handleAccount = (account : String) => {
+    if (account) {
+      console.log ("Account connected: ", account);
+      setAccount(account);
+    }
+    else {
+      console.log("No account found");
+    }
+  }
+
+  const getWallet = async() => {
+    if (window.ethereum) {
+      setEthWallet(window.ethereum);
+    }
+
+    if (ethWallet) {
+      const account = await ethWallet.request({method: "eth_accounts"});
+      handleAccount(account);
+    }
+  }
+  useEffect(() => {getWallet()}, []);
+
+  const connectAccount = async() => {
+    if (!ethWallet) {
+      alert('MetaMask wallet is required to connect');
+      return;
+    }
+  
+    const accounts = await ethWallet.request({ method: 'eth_requestAccounts' });
+    handleAccount(accounts);
+  };
+
+  const initUser = () => {
+    // Check to see if user has Metamask
+    if (!ethWallet) {
+      return <p>Please install Metamask in order to use this ATM.</p>
+    }
+
+    // Check to see if user is connected. If not, connect to their account
+    if (!account) {
+      return <button onClick={connectAccount}>Please connect your Metamask wallet</button>
+    }
+
+    return (
+      <div>
+        <p>Your Account: {account}</p>
+      </div>
+    )
+  }
+
+  const getATMContract = () => {
+    const provider = new ethers.providers.Web3Provider(ethWallet);
+    const signer = provider.getSigner();
+    const atmContract = new ethers.Contract(contractAddress, atmABI, signer);
+    setATM(atmContract);
+  }
+
+  return (
+    <main className="container">
+      <header><h1>Welcome to the Metabuilders ATM!</h1></header>
+      {initUser()}
+      <style jsx>{`
+        .container {
+          text-align: center
+        }
+      `}
+      </style>
+    </main>
+  )
+}
