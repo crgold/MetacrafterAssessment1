@@ -19,19 +19,10 @@ export default function HomePage() {
   const [ethWallet, setEthWallet] = useState<any>(undefined);
   const [account, setAccount] = useState<String | undefined>(undefined);
   const [atm, setATM] = useState<Contract | undefined>(undefined);
+  const [balance, setBalance] = useState(undefined);
 
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   const atmABI = atm_abi.abi;
-
-  const handleAccount = (account : String) => {
-    if (account) {
-      console.log ("Account connected: ", account);
-      setAccount(account);
-    }
-    else {
-      console.log("No account found");
-    }
-  }
 
   const getWallet = async() => {
     if (window.ethereum) {
@@ -43,7 +34,16 @@ export default function HomePage() {
       handleAccount(account);
     }
   }
-  useEffect(() => {getWallet()}, []);
+
+  const handleAccount = (account : String) => {
+    if (account) {
+      console.log ("Account connected: ", account);
+      setAccount(account);
+    }
+    else {
+      console.log("No account found");
+    }
+  }
 
   const connectAccount = async() => {
     if (!ethWallet) {
@@ -53,7 +53,40 @@ export default function HomePage() {
   
     const accounts = await ethWallet.request({ method: 'eth_requestAccounts' });
     handleAccount(accounts);
+    
+    // once wallet is set we can get a reference to our deployed contract
+    getATMContract();
   };
+
+  const getATMContract = () => {
+    const provider = new ethers.providers.Web3Provider(ethWallet);
+    const signer = provider.getSigner();
+    const atmContract = new ethers.Contract(contractAddress, atmABI, signer);
+ 
+    setATM(atmContract);
+  }
+
+  const getBalance = async() => {
+    if (atm) {
+      setBalance((await atm.getBalance()).toNumber());
+    }
+  }
+
+  const deposit = async() => {
+    if (atm) {
+      let tx = await atm.deposit(1);
+      await tx.wait()
+      getBalance();
+    }
+  }
+
+  const withdraw = async() => {
+    if (atm) {
+      let tx = await atm.withdraw(1);
+      await tx.wait()
+      getBalance();
+    }
+  }
 
   const initUser = () => {
     // Check to see if user has Metamask
@@ -66,19 +99,22 @@ export default function HomePage() {
       return <button onClick={connectAccount}>Please connect your Metamask wallet</button>
     }
 
+    if (balance == undefined) {
+      getBalance();
+    }
+
     return (
       <div>
         <p>Your Account: {account}</p>
+        <p>Your Balance: {balance}</p>
+        <button onClick={getBalance}>Balance Wat?!</button>
+        <button onClick={deposit}>Deposit 1 ETH</button>
+        <button onClick={withdraw}>Withdraw 1 ETH</button>
       </div>
     )
   }
 
-  const getATMContract = () => {
-    const provider = new ethers.providers.Web3Provider(ethWallet);
-    const signer = provider.getSigner();
-    const atmContract = new ethers.Contract(contractAddress, atmABI, signer);
-    setATM(atmContract);
-  }
+  useEffect(() => {getWallet(); getBalance();}, [balance]);
 
   return (
     <main className="container">
