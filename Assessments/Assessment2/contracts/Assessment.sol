@@ -5,7 +5,7 @@ import "hardhat/console.sol";
 
 contract Assessment {
     address payable public owner;
-    uint public balance;
+    uint256 public balance;
 
     event Deposit(uint256 amount);
     event Withdraw(uint256 amount);
@@ -15,8 +15,11 @@ contract Assessment {
         balance = initBalance;
     }
 
-    function deposit(uint256 _amount) public payable {
+    function getBalance() public view returns(uint256){
+        return balance;
+    }
 
+    function deposit(uint256 _amount) public payable {
         uint _previousBalance = balance;
 
         // make sure this is the owner
