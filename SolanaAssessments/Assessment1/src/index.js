@@ -1,3 +1,5 @@
+// So we can use prompt in the node environment
+const prompt = require("prompt-sync")();
 // Import Solana web3 functionalities
 const {
     Connection,
@@ -15,7 +17,6 @@ const getWalletBalance = async (userPublicKey) => {
     try {
         // Connect to the Devnet
         const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-        console.log("Connection object is:", connection);
 
         const walletBalance = await connection.getBalance(userPublicKey);
         return (parseInt(walletBalance) / LAMPORTS_PER_SOL).toString();
@@ -30,26 +31,21 @@ const airDropSol = async () => {
         const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
         // Ask user for their address and request airdrop of 2 SOL to their wallet
-        const userPublicKey = prompt("Please enter your address for the airdrop: ")
-        console.log ('Your balance before the airdrop: %s SOL', getWalletBalance(userPublicKey))
+        const userPublicKey = new PublicKey(prompt("Please enter your address for the airdrop: "));
+        console.log ('Your balance before the airdrop: %s SOL', await getWalletBalance(userPublicKey))
         console.log("Airdropping some SOL to your wallet!");
         const airDropSignature = await connection.requestAirdrop(
             userPublicKey,
-            2 * LAMPORTS_PER_SOL
+            1 * LAMPORTS_PER_SOL,
         );
-        const latestBlockHash = await connection.getLatestBlockhash();
-        await connection.confirmTransaction(
-            latestBlockHash.blockhash,
-            latestBlockHash.lastValidBlockHeight,
-            airDropSignature,
-        );
-        console.log ('Your balance after the airdrop: %s SOL', getWalletBalance(userPublicKey))
+        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();;
+        await connection.confirmTransaction(blockhash, lastValidBlockHeight, airDropSignature);
+        console.log ('Your balance after the airdrop: %s SOL', await getWalletBalance(userPublicKey));
+        console.log(`https://solscan.io/tx/${airDropSignature}?cluster=devnet`);
     } catch (err) {
         console.log(err);
     }
 };
-
-// Show the wallet balance before and after airdropping SOL
 const mainFunction = async () => {
     await airDropSol();
 }
