@@ -27,9 +27,6 @@ const getWalletBalance = async (userPublicKey) => {
 
 const airDropSol = async () => {
     try {
-        // Connect to the Devnet
-        const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-
         // Ask user for their address and request airdrop of 2 SOL to their wallet
         const userPublicKey = new PublicKey(prompt("Please enter your address for the airdrop: "));
         console.log ('Your balance before the airdrop: %s SOL', await getWalletBalance(userPublicKey))
