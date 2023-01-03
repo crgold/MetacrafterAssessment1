@@ -38,8 +38,7 @@ const airDropSol = async () => {
             userPublicKey,
             1 * LAMPORTS_PER_SOL,
         );
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();;
-        await connection.confirmTransaction(blockhash, lastValidBlockHeight, airDropSignature);
+        await connection.confirmTransaction(airDropSignature);
         console.log ('Your balance after the airdrop: %s SOL', await getWalletBalance(userPublicKey));
         console.log(`https://solscan.io/tx/${airDropSignature}?cluster=devnet`);
     } catch (err) {
