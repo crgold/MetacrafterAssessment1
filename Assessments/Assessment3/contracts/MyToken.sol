@@ -9,8 +9,8 @@ contract MyToken {
     string public name;
     string public symbol;
     uint8 public decimal;
-    uint256 public decimalConstant;
-    uint256 private _totalSupply = 0;
+    uint256 internal decimalConstant;
+    uint256 internal _totalSupply = 0;
 
     // balances of token holders
     mapping (address => uint256) private _balances;
@@ -32,7 +32,7 @@ contract MyToken {
         return true;
     }
 
-    function _mint(address account, uint256 amount) private {
+    function _mint(address account, uint256 amount) internal {
         require(amount > 0);
         _totalSupply += amount;
         _transfer(account, amount);
@@ -43,7 +43,7 @@ contract MyToken {
         return true;
     }
 
-    function _burn(address account, uint256 amount) private {
+    function _burn(address account, uint256 amount) internal {
         require(amount > 0 && _balances[account] >= amount);
         _totalSupply -= amount;
         _balances[account] -= amount;
@@ -54,13 +54,13 @@ contract MyToken {
         return true;
     }
 
-    function _transfer(address reciever, uint256 amount) private {
+    function _transfer(address reciever, uint256 amount) internal {
         require(amount > 0);
         _balances[reciever] += amount;
         emit Transfer(reciever, amount);
     }
 
-    function _transfer(address sender, address reciever, uint256 amount) private {
+    function _transfer(address sender, address reciever, uint256 amount) internal {
         require(amount > 0 && _balances[sender] >= amount);
         _balances[sender] -= amount;
         _balances[reciever] += amount;
