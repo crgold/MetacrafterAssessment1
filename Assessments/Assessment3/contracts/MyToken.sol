@@ -49,11 +49,6 @@ contract MyToken {
         _balances[account] -= amount;
     }
 
-    function transfer(address reciever, uint256 amount) public returns (bool) {
-        _transfer(reciever, amount * decimalConstant);
-        return true;
-    }
-
     function transferFrom(address sender, address reciever, uint256 amount) public returns (bool) {
         _transfer(sender, reciever, amount * decimalConstant);
         return true;
