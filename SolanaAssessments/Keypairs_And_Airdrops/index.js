@@ -55,8 +55,8 @@ const transferSol = async (from, to, amount) => {
     try {
         const transaction = new Transaction().add(
             SystemProgram.transfer({
-                fromPubkey: from,
-                toPubkey: to,
+                fromPubkey: from.publicKey,
+                toPubkey: to.publicKey,
                 lamports: amount
             })
         );
@@ -64,7 +64,7 @@ const transferSol = async (from, to, amount) => {
         let signature = await sendAndConfirmTransaction(
             connection,
             transaction,
-            [sender]
+            [from]
         );
         console.log(`Signature of transfer is ${signature}`);
     } catch (err) {
@@ -83,7 +83,7 @@ const mainFunction = async () => {
 
     // Transfer 50% of sender balance to receiver
     console.log("Transferring 50% of sender wallet to receiver wallet");
-    transferSol(senderPublicKey, receiverPublicKey, (await getWalletBalance(senderPublicKey) * 0.5));
+    await transferSol(sender, receiver, (await getWalletBalance(senderPublicKey) * 0.5));
 
     // Display new balances
     console.log(`Sender wallet balance: ${await getWalletBalance(senderPublicKey) / LAMPORTS_PER_SOL} SOL`);
