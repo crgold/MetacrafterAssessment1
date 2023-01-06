@@ -3,6 +3,7 @@ import {
   Transaction,
 } from '@solana/web3.js'
 import {useEffect , useState } from 'react'
+import { isWhiteSpaceLike } from 'typescript';
 
 // create types
 type DisplayEncoding = "utf8" | "hex";
@@ -99,14 +100,17 @@ function App() {
               fontSize: "16px",
               padding: "15px",
               fontWeight: "bold",
-              borderRadius: "5px"
+              borderRadius: "5px",
+              backgroundColor: "white",
+              color: "#282c34",
+              marginTop: "15px",
             }}
             onClick={connectWallet}
           >
             Connect Wallet
           </button>
         )}
-        {provider && walletKey && <p>Connected account</p> }
+        {provider && walletKey && <p>Connected to account: <br></br> {provider.publicKey?.toString()}</p> }
 
         {!provider && (
           <p>
