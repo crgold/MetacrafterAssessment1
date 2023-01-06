@@ -1,7 +1,3 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
 import {
   PublicKey,
   Transaction,
@@ -97,14 +93,13 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h2>Connect to Phantom Wallet</h2>
-      </header>
       {provider && !walletKey && (
           <button
             style={{
               fontSize: "16px",
               padding: "15px",
               fontWeight: "bold",
-              borderRadius: "5px",
+              borderRadius: "5px"
             }}
             onClick={connectWallet}
           >
@@ -119,6 +114,7 @@ function App() {
             <a href="https://phantom.app/">Phantom Browser extension</a>
           </p>
         )}
+        </header>
     </div>
   );
 }
