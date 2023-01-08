@@ -8,6 +8,7 @@ import {
   SystemProgram,
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
+import { connect } from "http2";
 import { useEffect, useState } from "react";
 
 // create types
@@ -64,7 +65,7 @@ function App() {
   );
 
   // create state variable to hold wallet created programmatically
-  const [firstWalletKey, setFirstWalletKey] = useState<Keypair | undefined>(
+  const [sender, setSender] = useState<Keypair | undefined>(
     undefined
   );
 
@@ -129,34 +130,29 @@ function App() {
             onClick={async () => {
               try {
                 // create new wallet and airdrop 2 sol to it
-                setFirstWalletKey(new Keypair());
-                if (firstWalletKey) {
-                  console.log(
-                    `New account created: ${firstWalletKey.publicKey}`
-                  );
-                }
-                // check to insure key exists display original balance, perform airdrop, and show new balance
-                if (firstWalletKey) {
-                  console.log(
-                    `Balance on new account is: ${await connection.getBalance(
-                      firstWalletKey.publicKey
-                    )}`
-                  );
-                  const signature = await connection.requestAirdrop(
-                    firstWalletKey.publicKey,
-                    2 * LAMPORTS_PER_SOL
-                  );
-                  await connection.confirmTransaction(signature);
-                  console.log(
-                    `Airdrop completed. Balance on new account is: ${await connection.getBalance(
-                      firstWalletKey.publicKey
-                    )}`
-                  );
-                  // set account creation flag to true
-                  setIsAccountCreated(true);
-                  // hide button
-                  setShowNewAccountBtn(false);
-                }
+                const newWallet = new Keypair();
+                console.log(`New account created: ${newWallet.publicKey}`);
+                console.log(
+                  `Balance on new account is: ${await connection.getBalance(
+                    newWallet.publicKey
+                  )}`
+                );
+                const signature = await connection.requestAirdrop(
+                  new PublicKey(newWallet.publicKey),
+                  2 * LAMPORTS_PER_SOL
+                );
+                await connection.confirmTransaction(signature);
+                console.log(newWallet.publicKey);
+                console.log(
+                  `Airdrop completed. Balance on new account is: ${await connection.getBalance(
+                    newWallet.publicKey
+                  )}`
+                );
+                // set account creation flag to true and set sender to the new wallet
+                setIsAccountCreated(true);
+                setSender(newWallet);
+                // hide button
+                setShowNewAccountBtn(false);
               } catch (err) {
                 console.log(err);
               }
@@ -179,10 +175,7 @@ function App() {
               color: "#282c34",
               marginTop: "15px",
             }}
-            onClick={() => {
-              connectWallet;
-              setShowConnectWalletTxt(false);
-            }}
+            onClick={connectWallet}
           >
             Connect Wallet
           </button>
@@ -190,7 +183,7 @@ function App() {
         {isAccountCreated && provider && walletKey && (
           <div>
             <p>
-              Connected to account: <br></br> {provider.publicKey?.toString()}
+              Connected to account: <br></br> {provider.publicKey.toString()}
             </p>
             <button
               style={{
@@ -202,7 +195,33 @@ function App() {
                 color: "#282c34",
                 marginTop: "15px",
               }}
-              onClick={connectWallet}
+              onClick={async () => {
+                try {
+                  if (sender) {
+                    console.log(`${sender.publicKey.toString()}`);
+                    console.log(
+                      `Balance before transfer: ${await connection.getBalance(
+                        sender.publicKey
+                      )}`
+                    );
+                    const transaction = new Transaction().add(
+                      SystemProgram.transfer({
+                        fromPubkey: sender.publicKey,
+                        toPubkey: new PublicKey(walletKey),
+                        lamports: 1 * LAMPORTS_PER_SOL,
+                      })
+                    );
+                    const signature = await sendAndConfirmTransaction(
+                      connection,
+                      transaction,
+                      [sender]
+                    );
+                    console.log(`Signature of transfer is ${signature}`);
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
             >
               Transfer to new wallet
             </button>
@@ -220,26 +239,9 @@ function App() {
                 top: "0px",
                 right: "0px",
               }}
-              onClick={async () => {
-                try {
-                  if (firstWalletKey) {
-                    const transaction = new Transaction().add(
-                      SystemProgram.transfer({
-                        fromPubkey: firstWalletKey.publicKey,
-                        toPubkey: new PublicKey(walletKey),
-                        lamports: 2 * LAMPORTS_PER_SOL,
-                      })
-                    );
-                    const signature = await sendAndConfirmTransaction(
-                      connection,
-                      transaction,
-                      [firstWalletKey]
-                    );
-                    console.log(`Signature of transfer is ${signature}`);
-                  }
-                } catch (err) {
-                  console.log(err);
-                }
+              onClick={() => {
+                setWalletKey(undefined);
+                provider.disconnect();
               }}
             >
               Disconnect Wallet
