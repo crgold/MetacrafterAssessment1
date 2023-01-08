@@ -132,21 +132,15 @@ function App() {
                 // create new wallet and airdrop 2 sol to it
                 const newWallet = new Keypair();
                 console.log(`New account created: ${newWallet.publicKey}`);
-                console.log(
-                  `Balance on new account is: ${await connection.getBalance(
-                    newWallet.publicKey
-                  )}`
-                );
                 const signature = await connection.requestAirdrop(
                   new PublicKey(newWallet.publicKey),
                   2 * LAMPORTS_PER_SOL
                 );
                 await connection.confirmTransaction(signature);
-                console.log(newWallet.publicKey);
                 console.log(
                   `Airdrop completed. Balance on new account is: ${await connection.getBalance(
                     newWallet.publicKey
-                  )}`
+                  ) / LAMPORTS_PER_SOL}`
                 );
                 // set account creation flag to true and set sender to the new wallet
                 setIsAccountCreated(true);
@@ -198,11 +192,10 @@ function App() {
               onClick={async () => {
                 try {
                   if (sender) {
-                    console.log(`${sender.publicKey.toString()}`);
                     console.log(
                       `Balance before transfer: ${await connection.getBalance(
                         sender.publicKey
-                      )}`
+                      ) / LAMPORTS_PER_SOL}`
                     );
                     const transaction = new Transaction().add(
                       SystemProgram.transfer({
@@ -216,8 +209,11 @@ function App() {
                       transaction,
                       [sender]
                     );
-                    console.log(`Signature of transfer is ${signature}`);
-                  }
+                    console.log(`Signature of transfer is ${signature}`);console.log(
+                      `Sender balance after transfer: ${await connection.getBalance(
+                        sender.publicKey
+                      ) / LAMPORTS_PER_SOL}` 
+                    );
                 } catch (err) {
                   console.log(err);
                 }
