@@ -65,9 +65,7 @@ function App() {
   );
 
   // create state variable to hold wallet created programmatically
-  const [sender, setSender] = useState<Keypair | undefined>(
-    undefined
-  );
+  const [sender, setSender] = useState<Keypair | undefined>(undefined);
 
   // state to hold whether the first wallet key was successfully created
   const [isAccountCreated, setIsAccountCreated] = useState(false);
@@ -138,9 +136,10 @@ function App() {
                 );
                 await connection.confirmTransaction(signature);
                 console.log(
-                  `Airdrop completed. Balance on new account is: ${await connection.getBalance(
-                    newWallet.publicKey
-                  ) / LAMPORTS_PER_SOL}`
+                  `Airdrop completed. Balance on new account is: ${
+                    (await connection.getBalance(newWallet.publicKey)) /
+                    LAMPORTS_PER_SOL
+                  }`
                 );
                 // set account creation flag to true and set sender to the new wallet
                 setIsAccountCreated(true);
@@ -193,15 +192,16 @@ function App() {
                 try {
                   if (sender) {
                     console.log(
-                      `Balance before transfer: ${await connection.getBalance(
-                        sender.publicKey
-                      ) / LAMPORTS_PER_SOL}`
+                      `Balance before transfer: ${
+                        (await connection.getBalance(sender.publicKey)) /
+                        LAMPORTS_PER_SOL
+                      }`
                     );
                     const transaction = new Transaction().add(
                       SystemProgram.transfer({
                         fromPubkey: sender.publicKey,
                         toPubkey: new PublicKey(walletKey),
-                        lamports: 1 * LAMPORTS_PER_SOL,
+                        lamports: 2 * LAMPORTS_PER_SOL,
                       })
                     );
                     const signature = await sendAndConfirmTransaction(
@@ -209,11 +209,14 @@ function App() {
                       transaction,
                       [sender]
                     );
-                    console.log(`Signature of transfer is ${signature}`);console.log(
-                      `Sender balance after transfer: ${await connection.getBalance(
-                        sender.publicKey
-                      ) / LAMPORTS_PER_SOL}` 
+                    console.log(`Signature of transfer is ${signature}`);
+                    console.log(
+                      `Sender balance after transfer: ${
+                        (await connection.getBalance(sender.publicKey)) /
+                        LAMPORTS_PER_SOL
+                      }`
                     );
+                  }
                 } catch (err) {
                   console.log(err);
                 }
@@ -244,7 +247,6 @@ function App() {
             </button>
           </div>
         )}
-
         {!provider && (
           <p>
             No provider found. Install{" "}
