@@ -140,10 +140,11 @@ function App() {
                 console.log(
                   `Airdrop completed. Balance on new account is: ${await connection.getBalance(
                     newWallet.publicKey
-                  ) / LAMPORTS_PER_SOL}`
+                  ) / LAMPORTS_PER_SOL} SOL`
                 );
-                // set account creation flag to true and set sender to the new wallet
+                // set account creation flag to true
                 setIsAccountCreated(true);
+                // set sender to the new wallet
                 setSender(newWallet);
                 // hide button
                 setShowNewAccountBtn(false);
@@ -195,7 +196,7 @@ function App() {
                     console.log(
                       `Balance before transfer: ${await connection.getBalance(
                         sender.publicKey
-                      ) / LAMPORTS_PER_SOL}`
+                      ) / LAMPORTS_PER_SOL} SOL`
                     );
                     const transaction = new Transaction().add(
                       SystemProgram.transfer({
@@ -212,7 +213,7 @@ function App() {
                     console.log(`Signature of transfer is ${signature}`);console.log(
                       `Sender balance after transfer: ${await connection.getBalance(
                         sender.publicKey
-                      ) / LAMPORTS_PER_SOL}` 
+                      ) / LAMPORTS_PER_SOL} SOL` 
                     );
                       }
                 } catch (err) {
