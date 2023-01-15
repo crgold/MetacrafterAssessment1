@@ -1,24 +1,43 @@
 {
-  "name": "1",
-  "symbol": "",
+  "name": "Number #0001",
+  "symbol": "NB",
+  "description": "Collection of 10 numbers on the blockchain. This is the number 1/10.",
+  "seller_fee_basis_points": 500,
   "image": "0.png",
+  "attributes": [
+    {
+      "trait_type": "Layer-1",
+      "value": "0"
+    },
+    {
+      "trait_type": "Layer-2",
+      "value": "0"
+    },
+    {
+      "trait_type": "Layer-3",
+      "value": "0"
+    },
+    {
+      "trait_type": "Layer-4",
+      "value": "1"
+    }
+  ],
   "properties": {
-    "files": [{ "uri": "0.png", "type": "image/png" }],
-    "category": "image",
     "creators": [
       {
-        "address": "ABQ3z8HFBkNZtBYqXyW3qkWcioTd5DquaXvMkVVs2wim",
+        "address": "N4f6zftYsuu4yT7icsjLwh4i6pB1zvvKbseHj2NmSQw",
         "share": 100
+      }
+    ],
+    "files": [
+      {
+        "uri": "0.png",
+        "type": "image/png"
       }
     ]
   },
-  "description": "",
-  "seller_fee_basis_points": 500,
-  "attributes": [
-    { "trait_type": "background", "value": "blue" },
-    { "trait_type": "eyes", "value": "star-eyes" },
-    { "trait_type": "mouth", "value": "triangle-mouth" },
-    { "trait_type": "face", "value": "teal-face" }
-  ],
-  "collection": {}
+  "collection": {
+    "name": "numbers",
+    "family": "numbers"
+  }
 }
