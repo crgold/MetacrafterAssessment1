@@ -134,7 +134,7 @@ function App() {
                 console.log(`New account created: ${newWallet.publicKey}`);
                 const signature = await connection.requestAirdrop(
                   new PublicKey(newWallet.publicKey),
-                  0.2 * LAMPORTS_PER_SOL
+                  0.02 * LAMPORTS_PER_SOL
                 );
                 await connection.confirmTransaction(signature);
                 console.log(
@@ -202,7 +202,7 @@ function App() {
                       SystemProgram.transfer({
                         fromPubkey: sender.publicKey,
                         toPubkey: new PublicKey(walletKey),
-                        lamports: 0.1 * LAMPORTS_PER_SOL,
+                        lamports: 0.01 * LAMPORTS_PER_SOL,
                       })
                     );
                     const signature = await sendAndConfirmTransaction(
