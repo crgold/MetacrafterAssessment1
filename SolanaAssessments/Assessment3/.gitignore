@@ -8,6 +8,7 @@ yarn-error.log*
 sugar.log
 .env
 .vscode
+cache.json
 config.json
 node_modules
 **/.DS_Store
