@@ -3,7 +3,7 @@ import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMinimu
 import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
 import { bundlrStorage, findMetadataPda, keypairIdentity, Metaplex, UploadMetadataInput } from '@metaplex-foundation/js';
 import * as fs from 'fs';
-import secret from './ownerSecret.json';
+import secret from '../ownerSecret.json';
 const candyConfig = require('../config.json');
 
 const endpoint = 'https://api.devnet.solana.com';
@@ -129,7 +129,7 @@ const main = async (userSecret: any) => {
     const secret = JSON.stringify(secret_array); //Covert to JSON string
     const config = JSON.stringify(candyConfig); //Covert to JSON string
 
-    fs.writeFile('mintSecret.json', secret, 'utf8', function(err) {
+    fs.writeFile('../mintSecret.json', secret, 'utf8', function(err) {
     if (err) throw err;
     console.log('Wrote mint secret key to mintSecret.json.');
     });

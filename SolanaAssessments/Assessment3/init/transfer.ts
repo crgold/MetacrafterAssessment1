@@ -1,7 +1,7 @@
 import { getOrCreateAssociatedTokenAccount, createTransferInstruction } from "@solana/spl-token";
 import { Connection, Keypair, ParsedAccountData, PublicKey, sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
-import secret from './ownerSecret.json';
-import mintSecret from './mintSecret.json';
+import secret from '../ownerSecret.json';
+import mintSecret from '../mintSecret.json';
 
 const DEVNODE_RPC = 'https://api.devnet.solana.com';
 const SOLANA_CONNECTION = new Connection(DEVNODE_RPC);
