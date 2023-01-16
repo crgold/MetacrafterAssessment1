@@ -1,0 +1,12 @@
+{
+  "name": "CreateSPLToken",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@metaplex-foundation/js": "^0.17.12",
+    "@metaplex-foundation/mpl-token-metadata": "^2.5.2",
+    "@solana/spl-token": "^0.3.7",
+    "@solana/web3.js": "^1.73.0"
+  }
+}
