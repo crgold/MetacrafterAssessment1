@@ -129,12 +129,12 @@ const main = async (userSecret: any) => {
     const secret = JSON.stringify(secret_array); //Covert to JSON string
     const config = JSON.stringify(candyConfig); //Covert to JSON string
 
-    fs.writeFile('../mintSecret.json', secret, 'utf8', function(err) {
+    fs.writeFile('mintSecret.json', secret, 'utf8', function(err) {
     if (err) throw err;
     console.log('Wrote mint secret key to mintSecret.json.');
     });
 
-    fs.writeFile('../config.json', config, 'utf8', function(err) {
+    fs.writeFile('config.json', config, 'utf8', function(err) {
         if (err) throw err;
         console.log('Wrote config to config.json.');
         });
