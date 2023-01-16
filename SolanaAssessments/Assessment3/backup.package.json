@@ -7,13 +7,14 @@
     "@babel/runtime": "^7.15.5",
     "@civic/solana-gateway-react": "^0.10.0",
     "@identity.com/solana-gateway-ts": "^0.10.0",
+    "@metaplex-foundation/js": "^0.17.12",
+    "@metaplex-foundation/mpl-token-metadata": "^2.5.2",
     "@mui/icons-material": "^5.10.9",
     "@mui/lab": "^5.0.0-alpha.104",
     "@mui/material": "^5.10.10",
-    "@mui/system": "^5.11.4",
     "@project-serum/anchor": "^0.17.0",
     "@solana-mobile/wallet-adapter-mobile": "^0.9.7",
-    "@solana/spl-token": "^0.1.8",
+    "@solana/spl-token": "^0.3.7",
     "@solana/wallet-adapter-base": "^0.9.18",
     "@solana/wallet-adapter-material-ui": "^0.16.17-rc.3",
     "@solana/wallet-adapter-phantom": "^0.9.17",
@@ -22,7 +23,7 @@
     "@solana/wallet-adapter-slope": "^0.5.16",
     "@solana/wallet-adapter-solflare": "^0.6.18",
     "@solana/wallet-adapter-sollet": "^0.11.12",
-    "@solana/web3.js": "^1.58.0",
+    "@solana/web3.js": "^1.73.0",
     "mime": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
@@ -35,8 +36,8 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "craco --openssl-legacy-provider start",
-    "candyman": "cd init && ts-node -O '{\"module\":\"commonjs\"}' wallet.ts && ts-node -O '{\"module\":\"commonjs\"}' mint.ts && ts-node -O '{\"module\":\"commonjs\"}' transfer.ts && cd .. && sugar deploy",
+    "start": "craco start",
+    "candyman": "ts-node -O '{\"module\":\"commonjs\"}' wallet.ts && ts-node -O '{\"module\":\"commonjs\"}' mint.ts && ts-node -O '{\"module\":\"commonjs\"}' transfer.ts && sugar deploy",
     "lint": "prettier -c 'src/**/*.{ts,tsx}' && npm run lint:eslint",
     "lint:eslint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "prettier --write 'src/**/*.{ts,tsx}' && eslint --fix 'src/**/*.{ts,tsx}'",
@@ -83,9 +84,5 @@
     "eslint": "^7.11.0",
     "eslint-plugin-react": "^7.30.1",
     "prettier": "^2.7.1"
-  },
-  "resolutions": {
-    "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2"
   }
 }

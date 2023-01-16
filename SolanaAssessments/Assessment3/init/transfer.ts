@@ -1,7 +1,7 @@
 import { getOrCreateAssociatedTokenAccount, createTransferInstruction } from "@solana/spl-token";
 import { Connection, Keypair, ParsedAccountData, PublicKey, sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
-import secret from './guideSecret.json';
-import mintSecret from './guideSecret.json';
+import secret from './ownerSecret.json';
+import mintSecret from './mintSecret.json';
 
 const DEVNODE_RPC = 'https://api.devnet.solana.com';
 const SOLANA_CONNECTION = new Connection(DEVNODE_RPC);
@@ -13,19 +13,19 @@ const MINT_ADDRESS = Keypair.fromSecretKey(new Uint8Array(mintSecret));
 const TRANSFER_AMOUNT = 1;
 
 async function getNumberDecimals(mintAddress: string):Promise<number> {
-    const info = await SOLANA_CONNECTION.getParsedAccountInfo(new PublicKey(MINT_ADDRESS));
+    const info = await SOLANA_CONNECTION.getParsedAccountInfo(new PublicKey(mintAddress));
     const result = (info.value?.data as ParsedAccountData).parsed.info.decimals as number;
     return result;
 }
 
 async function sendTokens() {
-    console.log(`Sending ${TRANSFER_AMOUNT} ${(MINT_ADDRESS)} from ${(FROM_KEYPAIR.publicKey.toString())} to ${(DESTINATION_WALLET_ONE)}.`)
+    console.log(`Sending ${TRANSFER_AMOUNT} ${(MINT_ADDRESS.publicKey.toString())} from ${(FROM_KEYPAIR.publicKey.toString())} to ${(DESTINATION_WALLET_ONE)}.`)
     //Step 1
     console.log(`1 - Getting Source Token Account`);
     let sourceAccount = await getOrCreateAssociatedTokenAccount(
         SOLANA_CONNECTION, 
         FROM_KEYPAIR,
-        new PublicKey(MINT_ADDRESS),
+        new PublicKey(MINT_ADDRESS.publicKey),
         FROM_KEYPAIR.publicKey
     );
     console.log(`    Source Account: ${sourceAccount.address.toString()}`);
@@ -35,29 +35,29 @@ async function sendTokens() {
         let destinationAccountOne = await getOrCreateAssociatedTokenAccount(
             SOLANA_CONNECTION, 
             FROM_KEYPAIR,
-            new PublicKey(MINT_ADDRESS),
+            new PublicKey(MINT_ADDRESS.publicKey),
             new PublicKey(DESTINATION_WALLET_ONE)
         );
-        console.log(`    Destination Account: ${destinationAccountOne.address.toString()}`);
+        console.log(`    Destination Account One: ${destinationAccountOne.address.toString()}`);
 
         let destinationAccountTwo = await getOrCreateAssociatedTokenAccount(
             SOLANA_CONNECTION, 
             FROM_KEYPAIR,
-            new PublicKey(MINT_ADDRESS),
+            new PublicKey(MINT_ADDRESS.publicKey),
             new PublicKey(DESTINATION_WALLET_TWO)
         );
-        console.log(`    Destination Account: ${destinationAccountTwo.address.toString()}`);
+        console.log(`    Destination Account Two: ${destinationAccountTwo.address.toString()}`);
 
         let destinationAccountThree = await getOrCreateAssociatedTokenAccount(
             SOLANA_CONNECTION, 
             FROM_KEYPAIR,
-            new PublicKey(MINT_ADDRESS),
+            new PublicKey(MINT_ADDRESS.publicKey),
             new PublicKey(DESTINATION_WALLET_THREE)
         );
-        console.log(`    Destination Account: ${destinationAccountThree.address.toString()}`);
+        console.log(`    Destination Account Three: ${destinationAccountThree.address.toString()}`);
 
         //Step 3
-        console.log(`3 - Fetching Number of Decimals for Mint: ${MINT_ADDRESS}`);
+        console.log(`3 - Fetching Number of Decimals for Mint: ${MINT_ADDRESS.publicKey.toString()}`);
         const numberDecimals = await getNumberDecimals(MINT_ADDRESS.publicKey.toString());
         console.log(`    Number of Decimals: ${numberDecimals}`);
 
@@ -91,3 +91,4 @@ async function sendTokens() {
             `\n    https://explorer.solana.com/tx/${signature}?cluster=devnet`
         );
 }
+sendTokens();

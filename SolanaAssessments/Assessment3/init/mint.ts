@@ -1,9 +1,9 @@
-import { Transaction, SystemProgram, Keypair, Connection, PublicKey } from "@solana/web3.js";
+import { Transaction, SystemProgram, Keypair, Connection, PublicKey, Ed25519SecretKey } from "@solana/web3.js";
 import { MINT_SIZE, TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMinimumBalanceForRentExemptMint, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction, createMintToInstruction } from '@solana/spl-token';
 import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
 import { bundlrStorage, findMetadataPda, keypairIdentity, Metaplex, UploadMetadataInput } from '@metaplex-foundation/js';
 import * as fs from 'fs';
-import secret from './guideSecret.json';
+import secret from './ownerSecret.json';
 const candyConfig = require('../config.json');
 
 const endpoint = 'https://api.devnet.solana.com';
@@ -108,9 +108,9 @@ const createNewMintTransaction = async (connection: Connection, payer: Keypair, 
     return createNewTokenTransaction;
 }
 
-const main = async () => {
+const main = async (userSecret: any) => {
     console.log(`---STEP 1: Uploading MetaData---`);
-    const userWallet = Keypair.fromSecretKey(new Uint8Array(secret));
+    const userWallet = Keypair.fromSecretKey(new Uint8Array(userSecret));
     let metadataUri = await uploadMetadata(userWallet, MY_TOKEN_METADATA);
     ON_CHAIN_METADATA.uri = metadataUri;
 
@@ -123,13 +123,13 @@ const main = async () => {
         .split(',') //delimit string by commas and convert to an array of strings
         .map(value=>Number(value)); //convert string values to numbers inside the array
 
-    candyConfig.splTokenAccount = mintKeypair.publicKey.toString();
-    candyConfig.splToken = userWallet.publicKey.toString();
-
+    candyConfig.splToken = mintKeypair.publicKey.toString();
+    candyConfig.splTokenAccount = userWallet.publicKey.toString();
+    
     const secret = JSON.stringify(secret_array); //Covert to JSON string
     const config = JSON.stringify(candyConfig); //Covert to JSON string
 
-    fs.writeFile('guideSecret.json', secret, 'utf8', function(err) {
+    fs.writeFile('mintSecret.json', secret, 'utf8', function(err) {
     if (err) throw err;
     console.log('Wrote mint secret key to mintSecret.json.');
     });
@@ -157,4 +157,4 @@ const main = async () => {
     console.log(`View Transaction: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`);
     console.log(`View Token Mint: https://explorer.solana.com/address/${mintKeypair.publicKey.toString()}?cluster=devnet`)
 }
-main();
+main(secret);

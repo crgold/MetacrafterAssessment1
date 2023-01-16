@@ -17,9 +17,9 @@ const secret_array = keypair.secretKey
 
 const secret = JSON.stringify(secret_array); //Covert to JSON string
 
-fs.writeFile('guideSecret.json', secret, 'utf8', function(err) {
+fs.writeFile('ownerSecret.json', secret, 'utf8', function(err) {
     if (err) throw err;
-    console.log('Wrote secret key to guideSecret.json.');
+    console.log('Wrote secret key to ownerSecret.json.');
     });
 
 //STEP 4 - Airdrop 1 SOL to new wallet
