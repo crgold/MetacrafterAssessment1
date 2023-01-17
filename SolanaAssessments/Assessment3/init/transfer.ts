@@ -2,6 +2,8 @@ import { getOrCreateAssociatedTokenAccount, createTransferInstruction } from "@s
 import { Connection, Keypair, ParsedAccountData, PublicKey, sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
 import secret from '../ownerSecret.json';
 import mintSecret from '../mintSecret.json';
+import * as fs from 'fs';
+const candyConfig = require('../config.json');
 
 const DEVNODE_RPC = 'https://api.devnet.solana.com';
 const SOLANA_CONNECTION = new Connection(DEVNODE_RPC);
@@ -29,6 +31,14 @@ async function sendTokens() {
         FROM_KEYPAIR.publicKey
     );
     console.log(`    Source Account: ${sourceAccount.address.toString()}`);
+
+    candyConfig.splTokenAccount = sourceAccount.address.toString();
+    const config = JSON.stringify(candyConfig); //Covert to JSON string
+
+    fs.writeFile('config.json', config, 'utf8', function(err) {
+        if (err) throw err;
+            console.log('Wrote token account holder to config.json.');
+        });
 
         //Step 2
         console.log(`2 - Getting Destination Token Accounts`);

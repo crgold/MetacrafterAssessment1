@@ -124,7 +124,6 @@ const main = async (userSecret: any) => {
         .map(value=>Number(value)); //convert string values to numbers inside the array
 
     candyConfig.splToken = mintKeypair.publicKey.toString();
-    candyConfig.splTokenAccount = userWallet.publicKey.toString();
     
     const secret = JSON.stringify(secret_array); //Covert to JSON string
     const config = JSON.stringify(candyConfig); //Covert to JSON string
@@ -136,7 +135,7 @@ const main = async (userSecret: any) => {
 
     fs.writeFile('config.json', config, 'utf8', function(err) {
         if (err) throw err;
-        console.log('Wrote config to config.json.');
+        console.log('Wrote mint address to config.json.');
         });
 
     console.log(`New Mint Address: `, mintKeypair.publicKey.toString());

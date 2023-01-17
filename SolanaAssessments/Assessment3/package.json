@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "craco --openssl-legacy-provider start",
-    "candyman": "cd init && ts-node -O '{\"module\":\"commonjs\"}' wallet.ts && ts-node -O '{\"module\":\"commonjs\"}' mint.ts && ts-node -O '{\"module\":\"commonjs\"}' transfer.ts && cd .. && sugar deploy",
+    "candyman": "ts-node ./init/wallet.ts && ts-node ./init/mint.ts && ts-node ./init/transfer.ts && sugar update",
     "lint": "prettier -c 'src/**/*.{ts,tsx}' && npm run lint:eslint",
     "lint:eslint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "prettier --write 'src/**/*.{ts,tsx}' && eslint --fix 'src/**/*.{ts,tsx}'",
